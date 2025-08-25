@@ -38,9 +38,9 @@
       <p class="text-sm text-gray-600 mb-2">Perhitungan di bawah belum termasuk biaya administrasi dan lain-lain.</p>
       <div class="grid grid-cols-2 gap-2">
         <p>Nominal Deposito</p><p id="nominal"></p>
-        <p>Bunga Kotor</p><p id="bungaKotor"></p>
         <p>Pajak (20%)</p><p id="pajak"></p>
-        <p>Bunga Bersih</p><p id="bungaBersih"></p>
+        <p>Bunga Bersih Per Bulan</p><p id="bungaBersihBulan"></p>
+        <p>Bunga Bersih Total</p><p id="bungaBersih"></p>
         <p>Total Diterima</p><p id="totalDiterima"></p>
       </div>
     </div>
@@ -53,9 +53,8 @@
           <thead class="bg-gray-100">
             <tr>
               <th class="border px-2 py-1 text-left">Bulan</th>
-              <th class="border px-2 py-1">Bunga Kotor</th>
               <th class="border px-2 py-1">Pajak 20%</th>
-              <th class="border px-2 py-1">Bunga Bersih</th>
+              <th class="border px-2 py-1">Bunga Bersih / Bulan</th>
             </tr>
           </thead>
           <tbody id="tabelBody"></tbody>
@@ -92,13 +91,14 @@
       var bungaKotorTotal = plafon * bungaBulanan * tenor;
       var pajakTotal = bungaKotorTotal * 0.20;
       var bungaBersihTotal = bungaKotorTotal - pajakTotal;
+      var bungaBersihPerBulan = bungaBersihTotal / tenor;
       var totalDiterima = plafon + bungaBersihTotal;
 
       // Ringkasan hasil
       document.getElementById('hasil').classList.remove('hidden');
       document.getElementById('nominal').innerText = ": Rp " + fmt(plafon);
-      document.getElementById('bungaKotor').innerText = ": Rp " + fmt(Math.round(bungaKotorTotal));
       document.getElementById('pajak').innerText = ": Rp " + fmt(Math.round(pajakTotal));
+      document.getElementById('bungaBersihBulan').innerText = ": Rp " + fmt(Math.round(bungaBersihPerBulan));
       document.getElementById('bungaBersih').innerText = ": Rp " + fmt(Math.round(bungaBersihTotal));
       document.getElementById('totalDiterima').innerText = ": Rp " + fmt(Math.round(totalDiterima));
 
@@ -113,7 +113,6 @@
 
         var row = "<tr>" +
           "<td class='border px-2 py-1 text-left'>" + i + "</td>" +
-          "<td class='border px-2 py-1'>" + fmt(Math.round(bungaKotor)) + "</td>" +
           "<td class='border px-2 py-1'>" + fmt(Math.round(pajak)) + "</td>" +
           "<td class='border px-2 py-1'>" + fmt(Math.round(bungaBersih)) + "</td>" +
         "</tr>";
