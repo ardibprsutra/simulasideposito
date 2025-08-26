@@ -23,10 +23,10 @@
       <div>
         <label class="block text-sm font-medium mb-1">Tenor (bulan)</label>
         <select id="tenor" class="w-full border rounded-lg p-2">
-          <option value="1">1 Bulan</option>
-          <option value="3">3 Bulan</option>
-          <option value="6">6 Bulan</option>
-          <option value="12">12 Bulan</option>
+          <option value="1">1 bulan</option>
+          <option value="3">3 bulan</option>
+          <option value="6">6 bulan</option>
+          <option value="12">12 bulan</option>
         </select>
       </div>
     </div>
@@ -43,7 +43,6 @@
       <p class="text-sm text-gray-600 mb-2">Perhitungan di bawah belum termasuk biaya administrasi dan lain-lain.</p>
       <div class="grid grid-cols-2 gap-2">
         <p>Nominal Deposito</p><p id="nominal"></p>
-        <p>Suku Bunga</p><p id="bungaShow"></p>
         <p>Pajak (20%)</p><p id="pajak"></p>
         <p>Bunga Bersih Per Bulan</p><p id="bungaBersihBulan"></p>
         <p>Bunga Bersih Per Tahun</p><p id="bungaBersih"></p>
@@ -67,33 +66,32 @@
         </table>
       </div>
     </div>
+
+    <!-- Footer Catatan -->
+    <div class="mt-6 text-xs text-gray-600">
+      <p class="font-semibold">Catatan:</p>
+      <ol class="list-decimal list-inside">
+        <li>Suku bunga dapat berubah sewaktu-waktu mengikuti ketentuan yang berlaku.</li>
+        <li>Perhitungan ini hanya merupakan simulasi; hasil sebenarnya dapat berbeda sesuai kondisi dan data aktual.</li>
+      </ol>
+    </div>
   </div>
 
   <script>
     function fmt(num) {
       return new Intl.NumberFormat('id-ID').format(num);
     }
-
     function formatPlafon(el) {
       let val = el.value.replace(/\D/g, "");
       el.value = val ? parseInt(val).toLocaleString("id-ID") : "";
     }
-
     function parseNumber(str) {
       return parseFloat(str.replace(/\./g, "").replace(/,/g, "")) || 0;
     }
 
-    // Fungsi menentukan bunga sesuai aturan
-    function getBunga(plafon, tenor) {
-      if (plafon < 5000000) {
-        alert("Minimal nominal deposito adalah Rp 5.000.000");
-        return 0;
-      }
-
-      if (plafon >= 5000000 && plafon <= 10000000) {
-        return 5.25; // semua tenor
-      }
-
+    function tentukanBunga(plafon, tenor) {
+      if (plafon < 5000000) return null; // tidak memenuhi syarat
+      if (plafon >= 5000000 && plafon <= 10000000) return 5.25;
       if (plafon > 10000000) {
         if (tenor === 1) return 5.25;
         if (tenor === 3) return 5.50;
@@ -109,12 +107,15 @@
     function hitungDeposito() {
       var plafon = parseNumber(document.getElementById('plafon').value);
       var tenor = parseInt(document.getElementById('tenor').value) || 0;
+      var bungaTahunan = tentukanBunga(plafon, tenor);
 
-      var bungaTahunan = getBunga(plafon, tenor);
-      if (bungaTahunan === 0) return;
+      if (!bungaTahunan) {
+        alert("Minimal deposito adalah Rp 5.000.000");
+        return;
+      }
 
-      document.getElementById('bunga').value = bungaTahunan.toFixed(2);
-      
+      document.getElementById('bunga').value = bungaTahunan;
+
       var bungaBulanan = bungaTahunan / 12 / 100;
       var bungaKotorTotal = plafon * bungaBulanan * tenor;
       var pajakTotal = bungaKotorTotal * 0.20;
@@ -125,7 +126,6 @@
       // Ringkasan hasil
       document.getElementById('hasil').classList.remove('hidden');
       document.getElementById('nominal').innerText = ": Rp " + fmt(plafon);
-      document.getElementById('bungaShow').innerText = ": " + bungaTahunan.toFixed(2) + " % / tahun";
       document.getElementById('pajak').innerText = ": Rp " + fmt(Math.round(pajakTotal));
       document.getElementById('bungaBersihBulan').innerText = ": Rp " + fmt(Math.round(bungaBersihPerBulan));
       document.getElementById('bungaBersih').innerText = ": Rp " + fmt(Math.round(bungaBersihTotal));
