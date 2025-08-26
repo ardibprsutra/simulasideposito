@@ -43,7 +43,7 @@
       <p class="text-sm text-gray-600 mb-2">Perhitungan di bawah belum termasuk biaya administrasi dan lain-lain.</p>
       <div class="grid grid-cols-2 gap-2">
         <p>Nominal Deposito</p><p id="nominal"></p>
-        <p>Pajak (20%)</p><p id="pajak"></p>
+        <p>Pajak</p><p id="pajak"></p>
         <p>Bunga Bersih Per Bulan</p><p id="bungaBersihBulan"></p>
         <p>Bunga Bersih Per Tahun</p><p id="bungaBersih"></p>
         <p>Total Diterima</p><p id="totalDiterima"></p>
@@ -58,7 +58,7 @@
           <thead class="bg-gray-100">
             <tr>
               <th class="border px-2 py-1 text-left">Bulan</th>
-              <th class="border px-2 py-1">Pajak 20%</th>
+              <th class="border px-2 py-1">Pajak</th>
               <th class="border px-2 py-1">Bunga Bersih / Bulan</th>
             </tr>
           </thead>
@@ -71,8 +71,10 @@
     <div class="mt-6 text-xs text-gray-600">
       <p class="font-semibold">Catatan:</p>
       <ol class="list-decimal list-inside">
+        <li>Sesuai dengan ketentuan perpajakan mengenai simpanan deposito, saldo/hasil di atas Rp7.500.000 dikenakan pajak sesuai peraturan yang berlaku.</li>
+        <li>Hasil simulasi ini menggambarkan perhitungan dengan Asumsi untuk 1 (satu) rekening / Nasabah, baik tabungan maupun deposito.</li>
         <li>Suku bunga dapat berubah sewaktu-waktu mengikuti ketentuan yang berlaku.</li>
-        <li>Perhitungan ini hanya merupakan simulasi; hasil sebenarnya dapat berbeda sesuai kondisi dan data aktual.</li>
+        <li>Perhitungan ini hanya merupakan simulasi, hasil sebenarnya dapat berbeda sesuai kondisi dan data aktual.</li>
       </ol>
     </div>
   </div>
@@ -118,7 +120,9 @@
 
       var bungaBulanan = bungaTahunan / 12 / 100;
       var bungaKotorTotal = plafon * bungaBulanan * tenor;
-      var pajakTotal = bungaKotorTotal * 0.20;
+
+      // Pajak hanya jika plafon >= 7.500.000
+      var pajakTotal = plafon >= 7500000 ? bungaKotorTotal * 0.20 : 0;
       var bungaBersihTotal = bungaKotorTotal - pajakTotal;
       var bungaBersihPerBulan = bungaBersihTotal / tenor;
       var totalDiterima = plafon + bungaBersihTotal;
@@ -136,7 +140,7 @@
       tbody.innerHTML = "";
       for (var i = 1; i <= tenor; i++) {
         var bungaKotor = plafon * bungaBulanan;
-        var pajak = bungaKotor * 0.20;
+        var pajak = plafon >= 7500000 ? bungaKotor * 0.20 : 0;
         var bungaBersih = bungaKotor - pajak;
         var row = "<tr>" +
           "<td class='border px-2 py-1 text-left'>" + i + "</td>" +
