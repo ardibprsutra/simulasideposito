@@ -93,16 +93,28 @@
 
     function tentukanBunga(plafon, tenor) {
       if (plafon < 5000000) return null; // tidak memenuhi syarat
-      if (plafon >= 5000000 && plafon <= 10000000) return 5.25;
-      if (plafon > 10000000) {
-        if (tenor === 1) return 5.25;
-        if (tenor === 3) return 5.50;
-        if (tenor === 6) return 5.57;
-        if (tenor === 12) {
-          if (plafon <= 25000000) return 6.00;
-          if (plafon > 25000000) return 6.25;
-        }
+
+      // 5jt - 10jt → max 5%
+      if (plafon >= 5000000 && plafon <= 10000000) {
+        return 5.0;
       }
+
+      // 10jt - 25jt
+      if (plafon > 10000000 && plafon <= 25000000) {
+        if (tenor === 1) return 5.0;
+        if (tenor === 3) return 5.25;
+        if (tenor === 6) return 5.5;
+        if (tenor === 12) return 5.75;
+      }
+
+      // Di atas 25jt
+      if (plafon > 25000000) {
+        if (tenor === 1) return 5.0;
+        if (tenor === 3) return 5.25;
+        if (tenor === 6) return 5.5;
+        if (tenor === 12) return 6.0;
+      }
+
       return 0;
     }
 
