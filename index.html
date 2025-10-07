@@ -94,13 +94,13 @@
     function tentukanBunga(plafon, tenor) {
       if (plafon < 5000000) return null; // tidak memenuhi syarat
 
-      // 5jt - 10jt → max 5%
+      // 5jt - 10jt → max 4.5%
       if (plafon >= 5000000 && plafon <= 9999999) {
         return 4.50;
       }
 
       // 10jt - 25jt
-      if (plafon > 9999999 && plafon <= 25000000) {
+      if (plafon > 10000000 && plafon <= 25000000) {
         if (tenor === 1) return 4.75;
         if (tenor === 3) return 5.0;
         if (tenor === 6) return 5.25;
