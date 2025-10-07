@@ -90,33 +90,33 @@
     function parseNumber(str) {
       return parseFloat(str.replace(/\./g, "").replace(/,/g, "")) || 0;
     }
+function tentukanBunga(plafon, tenor) {
+  if (plafon < 5000000) return null; // tidak memenuhi syarat
 
-    function tentukanBunga(plafon, tenor) {
-      if (plafon < 5000000) return null; // tidak memenuhi syarat
+  // ≤ 9.999.999 → bunga 4.5% semua tenor
+  if (plafon <= 9999999) {
+    return 4.50;
+  }
 
-      // 5jt - 10jt → max 4.5%
-      if (plafon >= 5000000 && plafon <= 9999999) {
-        return 4.50;
-      }
+  // 10jt - 25jt
+  if (plafon >= 10000000 && plafon <= 25000000) {
+    if (tenor === 1) return 4.75;
+    if (tenor === 3) return 5.0;
+    if (tenor === 6) return 5.25;
+    if (tenor === 12) return 5.50;
+  }
 
-      // 10jt - 25jt
-      if (plafon >= 10000000 && plafon <= 25000000) {
-        if (tenor === 1) return 4.75;
-        if (tenor === 3) return 5.0;
-        if (tenor === 6) return 5.25;
-        if (tenor === 12) return 5.50;
-      }
+  // Di atas 25jt
+  if (plafon > 25000000) {
+    if (tenor === 1) return 4.75;
+    if (tenor === 3) return 5.0;
+    if (tenor === 6) return 5.25;
+    if (tenor === 12) return 5.75;
+  }
 
-      // Di atas 25jt
-      if (plafon > 25000000) {
-        if (tenor === 1) return 4.75;
-        if (tenor === 3) return 5.0;
-        if (tenor === 6) return 5.25;
-        if (tenor === 12) return 5.75;
-      }
+  return 0;
+}
 
-      return 0;
-    }
 
     function hitungDeposito() {
       var plafon = parseNumber(document.getElementById('plafon').value);
